@@ -3,132 +3,191 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b2a4a">
 <title>COMELEC Batangas Satellite Registration Locator</title>
 <style>
   :root{
-    --navy:#0b2a4a; --navy2:#16406b; --gold:#f2b705; --bg:#f3f6fa;
+    --navy:#0b2a4a; --navy2:#16406b; --gold:#f2b705; --bg:#eef2f7;
     --card:#ffffff; --text:#1b2633; --muted:#5f6b7a; --line:#e2e8f0;
     --green:#1a7f4b; --greenbg:#e5f6ec; --red:#b42318; --redbg:#fde8e6;
     --blue:#1d4ed8; --bluebg:#e6edff;
+    --shadow:0 6px 24px rgba(11,42,74,.08);
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
-  header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:28px 20px 26px;text-align:center}
-  header .seal{width:110px;height:110px;display:block;margin:0 auto 12px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
-  header h1{margin:0;font-size:22px;letter-spacing:.3px}
-  header p{margin:6px 0 0;opacity:.85;font-size:14px}
-  main{max-width:960px;margin:20px auto 40px;padding:0 16px}
-  .panel{background:var(--card);border-radius:14px;box-shadow:0 6px 24px rgba(11,42,74,.08);padding:16px}
-  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-  .tab{flex:1;min-width:110px;border:1px solid var(--line);background:#fff;padding:10px 12px;border-radius:10px;font-weight:600;color:var(--navy);cursor:pointer;font-size:15px}
-  .tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
-  .filters{margin-bottom:14px}
-  select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:15px;background:#fff;color:var(--text)}
-  .summary{font-size:14px;color:var(--muted);margin:4px 2px 12px}
-  .monthnav{display:flex;align-items:center;justify-content:space-between;margin:4px 0 10px;gap:8px}
-  .monthnav button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 14px;font-size:18px;cursor:pointer;color:var(--navy)}
-  .monthnav .mlabel{font-weight:700;color:var(--navy);font-size:16px;text-align:center}
-  .cal-head,.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
-  .calscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .cal-head{font-size:12px;font-weight:700;color:var(--muted);text-align:center;margin-bottom:6px}
-  .cell{border:1px solid var(--line);border-radius:10px;padding:6px;min-height:150px;background:#fff;min-width:0}
-  .cell.blank{border:none;background:transparent}
-  .cell.has{border-color:#c3d2e8}
-  .cell.is-today{border:2px solid var(--gold)}
-  .cell.sel{box-shadow:0 0 0 2px var(--navy) inset}
-  .cell.clickable{cursor:pointer}
-  .cal.week .cell{min-height:260px}
-  .dnum{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px}
-  .vb{background:var(--cbg,#f4f7fc);border-left:3px solid var(--c,var(--navy));border-radius:6px;padding:4px 6px;margin-bottom:5px;font-size:11px;line-height:1.35;overflow:hidden}
-  .vb.up .vbs{color:var(--blue)}
-  .vb.done .vbs{color:var(--muted)}
-  .vbc{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:var(--navy);opacity:.75;overflow-wrap:anywhere}
-  .vbt{font-weight:700;color:var(--navy);white-space:normal;overflow-wrap:anywhere}
-  .vbm{color:var(--muted);white-space:normal;word-break:break-word}
-  .vbs{font-weight:700;font-size:10px;margin-top:2px;color:var(--green)}
-  .vb.cx .vbs{color:var(--red)}
-  .vb.cx .vbt{text-decoration:line-through}
-  .vbmap{display:inline-block;margin-top:3px;font-size:10px;font-weight:600;color:var(--blue);text-decoration:none}
-  .vb{cursor:pointer}
-  .modal{position:fixed;inset:0;background:rgba(11,42,74,.55);align-items:center;justify-content:center;padding:16px;z-index:50}
-  .mbox{background:#fff;border-radius:14px;max-width:440px;width:100%;max-height:90vh;overflow:auto;padding:22px 20px 18px;position:relative;box-shadow:0 12px 40px rgba(0,0,0,.25)}
-  .mbox .card{grid-template-columns:1fr;margin:0}
-  .mbox .venue{font-size:20px}
-  .mbox .meta{font-size:16px}
-  .office-next{margin-top:12px;padding-top:12px;border-top:1px solid #c3d2e8;font-size:14px;line-height:1.5}
-  .btn-month{display:block;width:100%;margin-top:14px;padding:13px;border:1px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;font-weight:700;font-size:15px;cursor:pointer}
-  .btn-month:hover{background:var(--navy);color:#fff}
-  .office{background:var(--bluebg);border-radius:12px;padding:18px 16px;margin:14px 0;text-align:center;color:var(--navy)}
-  .office-msg{font-size:15px;line-height:1.5}
-  .office-msg b{font-size:16px}
-  .office .ofaddr{margin-top:8px;font-size:14px;color:var(--muted)}
-  .office .map{margin-top:8px}
-  .mclose{position:absolute;top:8px;right:10px;border:none;background:none;font-size:28px;line-height:1;cursor:pointer;color:var(--muted)}
-  .vbmap:hover{text-decoration:underline}
-  .more{font-size:11px;color:var(--muted)}
-  .day{margin:18px 0 8px;font-weight:700;color:var(--navy);font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .day span.count{font-weight:500;color:var(--muted);font-size:13px}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.45}
+
+  /* ---------- header ---------- */
+  header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:20px 16px}
+  .hwrap{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:16px}
+  .seal{width:84px;height:84px;object-fit:contain;flex:none;filter:drop-shadow(0 3px 8px rgba(0,0,0,.35))}
+  .htext h1{margin:0;font-size:22px;line-height:1.25;letter-spacing:.2px}
+  .htext p{margin:4px 0 0;opacity:.85;font-size:14px}
+
+  main{max-width:900px;margin:0 auto;padding:16px 16px 8px}
+
+  /* ---------- step 1: choose a city ---------- */
+  .picker{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+  .step-label{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800;color:var(--navy);margin-bottom:10px}
+  .step{width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex:none}
+  select{
+    width:100%;padding:14px 44px 14px 14px;font-size:17px;color:var(--text);
+    border:2px solid #b8c6dc;border-radius:12px;background-color:#fff;cursor:pointer;
+    -webkit-appearance:none;appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%230b2a4a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 16px center;
+  }
+  select:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(22,64,107,.2)}
+  .hint{margin:8px 2px 0;font-size:13px;color:var(--muted)}
+  .error{background:var(--redbg);color:var(--red);padding:10px 12px;border-radius:10px;font-size:14px;margin-bottom:12px;display:none}
+
+  /* ---------- how to use (shown until a city is chosen) ---------- */
+  .howto{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:18px 16px}
+  .howto h2{margin:0 0 12px;font-size:17px;color:var(--navy)}
+  .howto ol{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+  .howto li{display:flex;gap:12px;align-items:flex-start;font-size:15px}
+  .howto li .n{width:26px;height:26px;border-radius:50%;background:var(--bluebg);color:var(--navy);font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex:none;font-size:14px}
+  .howto .foot{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+
+  /* ---------- results ---------- */
+  .results{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:16px;display:none}
+  .res-head{margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .rt-city{font-size:23px;font-weight:800;color:var(--navy);line-height:1.2}
+  .rt-sub{font-size:14px;color:var(--muted);margin-top:3px}
+  .rt-count{display:inline-block;margin-top:8px;font-size:13px;font-weight:700;color:var(--navy);background:var(--bluebg);border-radius:999px;padding:3px 10px}
+  .tip{margin:0 0 10px;font-size:13px;color:var(--muted)}
+
+  /* visit cards */
+  .card{border:1px solid var(--line);border-left:5px solid var(--c,var(--navy));border-radius:12px;padding:14px 16px;margin-bottom:10px;background:#fff;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}
+  .card.cancelled{border-left-color:var(--red);opacity:.75}
+  .card.today{border-left-color:var(--gold);box-shadow:0 0 0 2px #fff3c4 inset}
+  .city{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700}
+  .results .card .city{display:none}
+  .venue{font-size:19px;font-weight:800;margin:2px 0 4px;color:var(--navy)}
+  .meta{font-size:15px;color:var(--muted);line-height:1.5}
+  .meta b{color:var(--text);font-weight:600}
+  .badges{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
   .badge{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap}
   .b-today{background:#fff3c4;color:#7a5800}
   .b-ok{background:var(--greenbg);color:var(--green)}
   .b-cancel{background:var(--redbg);color:var(--red)}
   .b-up{background:var(--bluebg);color:var(--blue)}
   .b-done{background:#eef0f3;color:var(--muted)}
-  .card{border:1px solid var(--line);border-left:5px solid var(--c,var(--navy));border-radius:12px;padding:14px 16px;margin-bottom:10px;background:#fff;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}
-  .card.cancelled{border-left-color:var(--red);opacity:.75}
-  .card.today{border-left-color:var(--gold);box-shadow:0 0 0 2px #fff3c4 inset}
-  .city{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700}
-  .venue{font-size:17px;font-weight:700;margin:2px 0 4px}
-  .meta{font-size:14px;color:var(--muted);line-height:1.5}
-  .meta b{color:var(--text);font-weight:600}
-  .badges{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
-  .map{display:inline-block;margin-top:6px;font-size:14px;font-weight:600;color:var(--blue);text-decoration:none}
-  .map:hover{text-decoration:underline}
-  .empty{text-align:center;color:var(--muted);padding:34px 10px}
-  .notice{font-size:13px;color:var(--muted);text-align:center;margin-top:18px}
-  .error{background:var(--redbg);color:var(--red);padding:10px 12px;border-radius:10px;font-size:14px;margin-bottom:12px;display:none}
-  footer{text-align:center;font-size:12px;color:var(--muted);padding:0 16px 24px}
+  .map{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:9px 16px;border-radius:9px;background:var(--blue);color:#fff;font-size:14px;font-weight:700;text-decoration:none}
+  .map:hover{background:#1e40af}
+
+  /* no-schedule message */
+  .office{background:var(--bluebg);border-radius:12px;padding:18px 16px;margin:4px 0 10px;text-align:center;color:var(--navy)}
+  .office-msg{font-size:15px;line-height:1.55}
+  .office-msg b{font-size:17px}
+  .office .ofaddr{margin-top:8px;font-size:14px;color:var(--muted)}
+  .office-next{margin-top:14px;padding-top:14px;border-top:1px solid #c3d2e8;font-size:15px;line-height:1.55}
+
+  /* big buttons */
+  .btn{display:block;width:100%;margin-top:14px;padding:14px;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:12px;font-weight:800;font-size:16px;cursor:pointer}
+  .btn:hover{background:var(--navy);color:#fff}
+  .btn.primary{background:var(--navy);color:#fff}
+  .btn.primary:hover{background:var(--navy2)}
+
+  /* ---------- month calendar ---------- */
+  .monthnav{display:flex;align-items:center;justify-content:space-between;margin:2px 0 12px;gap:8px}
+  .monthnav button{width:42px;height:42px;border:1px solid #b8c6dc;background:#fff;border-radius:10px;font-size:22px;line-height:1;cursor:pointer;color:var(--navy)}
+  .monthnav button:hover{background:var(--navy);color:#fff}
+  .monthnav .mlabel{font-weight:800;color:var(--navy);font-size:18px;text-align:center}
+  .cal-head,.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+  .cal-head{font-size:12px;font-weight:700;color:var(--muted);text-align:center;margin-bottom:6px}
+  .cell{border:1px solid var(--line);border-radius:10px;padding:6px;min-height:120px;background:#fff;min-width:0}
+  .cell.blank{border:none;background:transparent}
+  .cell.has{border-color:#c3d2e8;cursor:pointer}
+  .cell.clickable{cursor:pointer}
+  .cell.is-today{border:2px solid var(--gold)}
+  .cell.sel{box-shadow:0 0 0 2px var(--navy) inset}
+  .dnum{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px}
+  .is-today .dnum{display:inline-block;background:var(--gold);padding:0 7px;border-radius:999px}
+  .vb{background:var(--cbg,#f4f7fc);border-left:3px solid var(--c,var(--navy));border-radius:6px;padding:4px 6px;margin-bottom:5px;font-size:11px;line-height:1.35;overflow:hidden;cursor:pointer}
+  .vbt{font-weight:700;color:var(--navy);overflow-wrap:anywhere}
+  .vbm{color:var(--muted);overflow-wrap:anywhere}
+  .vbs{font-weight:700;font-size:10px;margin-top:2px;color:var(--green)}
+  .vb.up .vbs{color:var(--blue)}
+  .vb.done .vbs{color:var(--muted)}
+  .vb.cx .vbs{color:var(--red)}
+  .vb.cx .vbt{text-decoration:line-through}
+  .more{font-size:11px;color:var(--muted)}
+  .day{margin:18px 0 8px;font-weight:800;color:var(--navy);font-size:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .day .count{font-weight:500;color:var(--muted);font-size:13px}
+
+  /* ---------- details popup ---------- */
+  .modal{position:fixed;inset:0;background:rgba(11,42,74,.55);align-items:center;justify-content:center;padding:16px;z-index:50}
+  .mbox{background:#fff;border-radius:14px;max-width:440px;width:100%;max-height:90vh;overflow:auto;padding:22px 20px 18px;position:relative;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+  .mbox .card{grid-template-columns:1fr;margin:0}
+  .mbox .venue{font-size:20px}
+  .mbox .meta{font-size:16px}
+  .mclose{position:absolute;top:8px;right:10px;border:none;background:none;font-size:28px;line-height:1;cursor:pointer;color:var(--muted)}
+
+  footer{max-width:900px;margin:0 auto;padding:12px 16px 28px;text-align:center;font-size:13px;color:var(--muted)}
+  footer p{margin:4px 0}
+  footer .small{font-size:12px}
+
+  /* ---------- phones ---------- */
   @media(max-width:700px){
-    /* Both calendars fit the screen width. Tap a visit to see its details. */
-    .calscroll{overflow:visible}
-    .calscroll .cal-head,.calscroll .cal{min-width:0}
+    .seal{width:62px;height:62px}
+    .htext h1{font-size:17px}
+    .htext p{font-size:12.5px}
+    .hwrap{gap:12px}
+    main{padding:12px 12px 4px}
+    .picker,.results,.howto{padding:14px 12px}
+    .step-label{font-size:17px}
     .cal{gap:3px}
     .cal-head{font-size:10px;gap:3px}
     .cell{min-height:86px;padding:3px}
-    .cal.week .cell{min-height:120px}
     .cell .dnum{font-size:11px;margin-bottom:3px}
     .cell .vb{padding:3px 4px;margin-bottom:3px;font-size:9px}
-    .cell .vbc{font-size:7px;letter-spacing:0}
-    .cell .vbt{font-size:9px;white-space:normal;overflow-wrap:anywhere}
-    .cell .vbm{font-size:8px;white-space:normal;overflow-wrap:anywhere}
+    .cell .vbm{font-size:8px}
     .cell .vbs{font-size:8px;margin-top:1px}
-    .cell .vbmap{display:none}
     .mbox{padding:18px 14px 14px}
     .mbox .venue{font-size:18px}
     .card{grid-template-columns:1fr}
-    .badges{flex-direction:row;align-items:center}
+    .badges{flex-direction:row;align-items:center;order:-1}
   }
 </style>
 </head>
 <body>
 
 <header>
-  <img class="seal" src="comelec-logo.png" alt="COMELEC Province of Batangas seal">
-  <h1>COMELEC Batangas Satellite Registration Locator</h1>
-  <p>Province of Batangas · Where we are, today and the days ahead</p>
+  <div class="hwrap">
+    <img class="seal" src="comelec-logo.png" alt="COMELEC Province of Batangas seal">
+    <div class="htext">
+      <h1>COMELEC Batangas Satellite Registration Locator</h1>
+      <p>Find where our satellite registration team is today and in the days ahead</p>
+    </div>
+  </div>
 </header>
 
 <main>
-  <div class="panel">
-    <div class="error" id="error"></div>
+  <div class="error" id="error"></div>
 
-    <div class="filters">
-      <select id="cityFilter" aria-label="Filter by city or municipality">
-        <option value="">All cities / municipalities</option>
-      </select>
-    </div>
+  <!-- Step 1 -->
+  <section class="picker">
+    <label class="step-label" for="cityFilter"><span class="step">1</span> Select city/municipality</label>
+    <select id="cityFilter">
+      <option value="">Choose your city/municipality…</option>
+    </select>
+    <p class="hint">Pick the city or municipality where you want to register.</p>
+  </section>
 
-    <div class="summary" id="summary"></div>
+  <!-- Instructions (shown until a city is chosen) -->
+  <section class="howto" id="howto">
+    <h2>How to use this page</h2>
+    <ol>
+      <li><span class="n">1</span><div><b>Select</b> your city/municipality in the box above.</div></li>
+      <li><span class="n">2</span><div>See <b>today’s</b> registration barangay and location, then tap <b>Open in Maps</b> for directions.</div></li>
+      <li><span class="n">3</span><div>Tap <b>View month calendar</b> to check the dates ahead.</div></li>
+    </ol>
+    <p class="foot">If we are not in your area today, you can visit us at the COMELEC office.</p>
+  </section>
+
+  <!-- Results (shown after a city is chosen) -->
+  <section class="results" id="results">
+    <div class="res-head" id="resHead"></div>
 
     <div class="monthnav" id="nav" style="display:none">
       <button id="prev" aria-label="Previous month">‹</button>
@@ -137,12 +196,13 @@
     </div>
 
     <div id="list"></div>
-  </div>
-
-  <p class="notice">Schedule updates automatically. Venues may change; please check before you go.</p>
+  </section>
 </main>
 
-<footer>Last loaded: <span id="loaded">–</span></footer>
+<footer>
+  <p>Schedule updates automatically. Venues may change, so please check this page before you go.</p>
+  <p class="small">Last updated: <span id="loaded">–</span></p>
+</footer>
 
 <div id="modal" class="modal" style="display:none" onclick="closeDetail()">
   <div class="mbox" onclick="event.stopPropagation()">
@@ -153,36 +213,35 @@
 
 <script>
   /* ===== SETTINGS ==========================================================
-     Paste the "File > Share > Publish to web > CSV" link of your Google Sheet.
-     Leave it empty to show the demo data (your TEST_SCHED file) below.
+     SHEET_CSV_URL: the "File > Share > Publish to web > CSV" link of your Google Sheet.
      ========================================================================= */
   const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQQtaIudptiIIvzJJ4iUdKMV2D1m-abZFRn0q6rYg6o8yzbgn21oUvkbREpIfAJHw/pub?gid=1278383552&single=true&output=csv";
   const REFRESH_MINUTES = 5;
-
-  // Columns read from the sheet (any order; names are matched loosely):
-  // CITY/MUNICIPALITY | BARANGAY | DATE | TIME | LOCATION
-  // Optional: ADDRESS | STATUS (e.g. "Cancelled", "Ongoing") | NOTES
-  // A blank CITY/MUNICIPALITY cell means "same as the row above" (merged cells work).
-
-  // No schedule is stored in this file. Everything comes from the Google Sheet.
-  const SAMPLE_RAW = [];
 
   // COMELEC office details shown when there is no satellite registration.
   // Fill in the address and map link; leave empty to hide them.
   const OFFICE_ADDRESS = "";
   const OFFICE_MAP = "";
+  const OFFICE_LINE = "Our team is at the COMELEC office. Please visit us there for assistance.";
 
+  // Columns read from the sheet (any order; names are matched loosely):
+  // CITY/MUNICIPALITY | BARANGAY | DATE | LOCATION | STATUS
+  // Optional: ADDRESS | NOTES
+  // A blank CITY/MUNICIPALITY cell means "same as the row above" (merged cells work).
+  // Only type CANCELLED in STATUS when needed; the page works out the rest from the date.
   const ALIASES = {
     "city/municipality":"City/Municipality", "city":"City/Municipality", "municipality":"City/Municipality",
-    "barangay":"Barangay", "date":"Date", "time":"Time",
+    "barangay":"Barangay", "date":"Date",
     "location":"Venue", "venue":"Venue", "address":"Address",
-    "status":"Status", "notes":"Notes", "note":"Notes", "province":"Province"
+    "status":"Status", "notes":"Notes", "note":"Notes"
   };
 
   const $ = id => document.getElementById(id);
   let DATA = [];
+  let ready = false;      // true after the first load attempt
+  let mode = "today";     // "today" after a city is chosen, "month" for the month calendar
   let monthKey = "";      // "YYYY-MM" shown in the calendar
-  let selected = "";      // day picked in the monthly calendar
+  let selected = "";      // day picked in the month calendar
 
   // ---------- helpers ----------
   function manilaToday(){
@@ -190,32 +249,28 @@
     const g = t => parts.find(p=>p.type===t).value;
     return `${g("year")}-${g("month")}-${g("day")}`;
   }
-  function addDays(iso, n){
-    const [y,m,d] = iso.split("-").map(Number);
-    return new Date(Date.UTC(y,m-1,d+n)).toISOString().slice(0,10);
+  // Current hour in Manila (0-23): today's visits switch to "Done for today" at 6:00 pm
+  function manilaHour(){
+    return Number(new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Manila",hour:"numeric",hourCycle:"h23"}).format(new Date()));
   }
   function prettyDate(iso){
     const [y,m,d] = iso.split("-").map(Number);
     return new Date(Date.UTC(y,m-1,d)).toLocaleDateString("en-PH",{weekday:"long",month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});
   }
-  function shortWeekday(iso){
-    const [y,m,d] = iso.split("-").map(Number);
-    return new Date(Date.UTC(y,m-1,d)).toLocaleDateString("en-PH",{weekday:"short",timeZone:"UTC"});
-  }
   function esc(s){ return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 
-  // Accepts 2026-11-23 or 11/23/2026 (Google Sheets CSV default)
+  // Accepts 2026-11-23, 11/23/2026, November 23, 2026 (Google Sheets) or 23-Nov-26 (Excel)
   const MONTHS = {jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
   function toIso(v){
     v = String(v||"").trim();
-    let m = v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);                 // 2026-11-23
+    let m = v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
     if(m) return `${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
-    m = v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);                  // 11/23/2026
+    m = v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
     if(m) return `${m[3]}-${m[1].padStart(2,"0")}-${m[2].padStart(2,"0")}`;
-    m = v.match(/^([A-Za-z]+)\.?\s+(\d{1,2}),?\s+(\d{4})/);          // November 23, 2026 (Google Sheets CSV)
+    m = v.match(/^([A-Za-z]+)\.?\s+(\d{1,2}),?\s+(\d{4})/);
     if(m && MONTHS[m[1].slice(0,3).toLowerCase()])
       return `${m[3]}-${String(MONTHS[m[1].slice(0,3).toLowerCase()]).padStart(2,"0")}-${m[2].padStart(2,"0")}`;
-    m = v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{2,4})/);                  // 23-Nov-26 (Excel style)
+    m = v.match(/^(\d{1,2})-([A-Za-z]+)-(\d{2,4})/);
     if(m && MONTHS[m[2].slice(0,3).toLowerCase()]){
       const y = m[3].length===2 ? "20"+m[3] : m[3];
       return `${y}-${String(MONTHS[m[2].slice(0,3).toLowerCase()]).padStart(2,"0")}-${m[1].padStart(2,"0")}`;
@@ -257,7 +312,7 @@
     let lastCity = "";
     const out = [];
     for(const raw of rawRows){
-      const o = {Province:"Batangas"};
+      const o = {};
       for(const [k,v] of Object.entries(raw)){
         const key = ALIASES[String(k).trim().toLowerCase()];
         if(key) o[key] = String(v??"").trim();
@@ -274,12 +329,13 @@
   }
 
   // ---------- load data ----------
+  function showError(msg){ $("error").textContent = msg; $("error").style.display = "block"; }
+
   async function loadData(){
-    $("error").style.display="none";
+    $("error").style.display = "none";
     if(!SHEET_CSV_URL){
-      $("error").textContent = "The schedule link is not set yet. Please contact the administrator.";
-      $("error").style.display="block";
-      DATA = []; render(); stamp(); return;
+      showError("The schedule link is not set yet. Please contact the administrator.");
+      DATA = []; ready = true; render(); stamp(); return;
     }
     try{
       const res = await fetch(SHEET_CSV_URL + (SHEET_CSV_URL.includes("?")?"&":"?") + "t=" + Date.now(), {cache:"no-store"});
@@ -289,58 +345,54 @@
       const raw = parseCSV(text);
       DATA = normalize(raw);
       if(!raw.length){
-        $("error").textContent = "The sheet link opened but returned no rows. Check the tab is published and has data.";
-        $("error").style.display="block";
+        showError("The sheet link opened but returned no rows. Check the tab is published and has data.");
       } else if(!DATA.length){
         const dk = Object.keys(raw[0]).find(k=>/date/i.test(k));
         const sample = dk ? raw[0][dk] : "(no DATE column found)";
-        $("error").textContent = `Read ${raw.length} rows, but none had a usable date. First DATE value seen: "${sample}". Column names found: ${Object.keys(raw[0]).join(" | ")}`;
-        $("error").style.display="block";
+        showError(`Read ${raw.length} rows, but none had a usable date. First DATE value seen: "${sample}". Column names found: ${Object.keys(raw[0]).join(" | ")}`);
       }
-      render(); stamp();
     }catch(e){
-      $("error").textContent = "Could not load the latest schedule. Showing the last loaded data. (" + e.message + ")";
-      $("error").style.display="block";
-      render(); stamp();
+      showError("Could not load the latest schedule. Showing the last loaded data. (" + e.message + ")");
     }
+    ready = true; render(); stamp();
   }
   function stamp(){ $("loaded").textContent = new Date().toLocaleString("en-PH",{timeZone:"Asia/Manila"}); }
 
-  // ---------- filters & status ----------
+  // ---------- city list, status, colors ----------
+  function allCities(){ return [...new Set(DATA.map(r=>r["City/Municipality"]).filter(Boolean))].sort(); }
+
   function fillCities(){
     const cur = $("cityFilter").value;
-    const cities = [...new Set(DATA.map(r=>r["City/Municipality"]).filter(Boolean))].sort();
-    $("cityFilter").innerHTML = '<option value="">All cities / municipalities</option>' +
-      cities.map(c=>`<option ${c===cur?"selected":""}>${esc(c)}</option>`).join("");
+    const first = ready ? "Choose your city/municipality…" : "Loading cities…";
+    $("cityFilter").innerHTML = `<option value="">${first}</option>` +
+      allCities().map(c=>`<option ${c===cur?"selected":""}>${esc(c)}</option>`).join("");
   }
+
   function isCancelled(r){ return (r.Status||"").toLowerCase().includes("cancel"); }
-  function isOngoing(r){ return (r.Status||"").toLowerCase().includes("ongoing"); }
 
   function visitsOn(date){
     const city = $("cityFilter").value;
-    return DATA.filter(r=>r.Date===date && (!city || r["City/Municipality"]===city))
-      .sort((a,b)=> a["City/Municipality"].localeCompare(b["City/Municipality"]) || (a.Barangay||"").localeCompare(b.Barangay||""));
+    return DATA.filter(r=>r.Date===date && r["City/Municipality"]===city)
+      .sort((a,b)=> (a.Barangay||"").localeCompare(b.Barangay||""));
   }
 
-  // Only CANCELLED needs to be typed in the sheet. Everything else follows the date:
-  // today = Ongoing, future = Upcoming, past = Completed.
-  // Current hour in Manila (0-23), so today's visits switch to "Done for today" at 6:00 pm
-  function manilaHour(){
-    return Number(new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Manila",hour:"numeric",hourCycle:"h23"}).format(new Date()));
-  }
+  // today = Ongoing (until 6:00 pm), future = Upcoming, past = Completed, or Cancelled from the sheet
   function statusOf(r, today){
     if(isCancelled(r)) return {text:"Cancelled", cls:"cx", badge:"b-cancel"};
     if(r.Date===today){
       return manilaHour() >= 18
         ? {text:"Done for today", cls:"done", badge:"b-done"}
-        : {text:"Ongoing",   cls:"og", badge:"b-ok"};
+        : {text:"Ongoing", cls:"og", badge:"b-ok"};
     }
-    if(r.Date>today)   return {text:"Upcoming",  cls:"up", badge:"b-up"};
+    if(r.Date>today) return {text:"Upcoming", cls:"up", badge:"b-up"};
     return {text:"Completed", cls:"done", badge:"b-done"};
   }
-  function statusBadge(r, today){
-    const s = statusOf(r, today);
-    return `<span class="badge ${s.badge}">${s.text}</span>`;
+
+  const PALETTE = ["#1d4ed8","#0f9d58","#d97706","#9333ea","#db2777","#0891b2","#65a30d","#ea580c","#4f46e5","#0d9488"];
+  function cstyle(r){
+    const i = allCities().indexOf(r["City/Municipality"]);
+    const c = PALETTE[(i<0?0:i) % PALETTE.length];
+    return `--c:${c};--cbg:${c}1f`;
   }
 
   function mapUrl(r){
@@ -349,77 +401,46 @@
     return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
   }
 
-  // One full visit card (used in Today and in the picked day of the monthly calendar)
-  function cardHTML(r, today){
-    const cancelled = isCancelled(r);
-    const isToday = r.Date===today;
+  // ---------- building blocks ----------
+  // One full visit card (today list, picked day, and the details popup)
+  function cardHTML(r, today, showDate){
+    const s = statusOf(r, today);
     const title = r.Barangay ? "Brgy. " + r.Barangay : r.Venue;
     return `
-    <div class="card ${cancelled?"cancelled":""} ${isToday?"today":""}" style="${cstyle(r)}">
+    <div class="card ${isCancelled(r)?"cancelled":""} ${r.Date===today?"today":""}" style="${cstyle(r)}">
       <div>
         <div class="city">${esc(r["City/Municipality"])}</div>
         <div class="venue">${esc(title)}</div>
         <div class="meta">
+          ${showDate ? `<div><b>Date:</b> ${esc(prettyDate(r.Date))}</div>` : ""}
           ${r.Barangay && r.Venue ? `<div><b>Location:</b> ${esc(r.Venue)}</div>` : ""}
           ${r.Address ? `<div>${esc(r.Address)}</div>` : ""}
           ${r.Notes ? `<div><b>Note:</b> ${esc(r.Notes)}</div>` : ""}
         </div>
         <a class="map" href="${esc(mapUrl(r))}" target="_blank" rel="noopener">📍 Open in Maps</a>
       </div>
-      <div class="badges">${statusBadge(r,today)}</div>
+      <div class="badges"><span class="badge ${s.badge}">${s.text}</span></div>
     </div>`;
   }
 
-  // One calendar cell: date number + small chips for each visit
-  // City colors: every city keeps the same color in every view
-  const PALETTE = ["#1d4ed8","#0f9d58","#d97706","#9333ea","#db2777","#0891b2","#65a30d","#ea580c","#4f46e5","#0d9488"];
-  function allCities(){ return [...new Set(DATA.map(r=>r["City/Municipality"]).filter(Boolean))].sort(); }
-  function cityColor(name){
-    const i = allCities().indexOf(name);
-    return PALETTE[(i<0?0:i) % PALETTE.length];
-  }
-  function cstyle(r){
-    const c = cityColor(r["City/Municipality"]);
-    return `--c:${c};--cbg:${c}1f`;
-  }
-
-
-  // Next visit after today (used when today has no registration)
-  function nextVisitHTML(today){
-    const city = $("cityFilter").value;
-    const next = DATA.filter(r=>r.Date>today && !isCancelled(r) && (!city || r["City/Municipality"]===city))
-      .sort((a,b)=> a.Date.localeCompare(b.Date) || (a["City/Municipality"]).localeCompare(b["City/Municipality"]) || (a.Barangay||"").localeCompare(b.Barangay||""))[0];
-    if(!next) return "";
-    return `<div class="office-next">Next visit: <b>${esc(prettyDate(next.Date))}</b><br>${esc(next.Barangay||next.Venue)}, ${esc(next["City/Municipality"])}<br>
-      <a class="map" href="${esc(mapUrl(next))}" target="_blank" rel="noopener">📍 Open in Maps</a></div>`;
-  }
-
-  function miniBlock(r, full){
-    const today = manilaToday();
+  // Small visit block inside a calendar day
+  function miniBlock(r, today){
     const s = statusOf(r, today);
-    const st = s.cls;
-    const tag = s.text;
-    const txt = r.Barangay || r.Venue;
-    const tip = [r["City/Municipality"], r.Barangay, r.Venue, tag].filter(Boolean).join(" · ");
-    return `<div class="vb ${st}" style="${cstyle(r)}" title="${esc(tip)}" onclick="event.stopPropagation();openDetail(${r._id})">
-      <div class="vbt">${esc(txt)}</div>
-      ${r.Venue ? `<div class="vbm">${esc(r.Venue)}</div>` : ""}
-      <div class="vbs">${tag}</div>
+    const tip = [r.Barangay, r.Venue, s.text].filter(Boolean).join(" · ");
+    return `<div class="vb ${s.cls}" style="${cstyle(r)}" title="${esc(tip)}" onclick="event.stopPropagation();openDetail(${r._id})">
+      <div class="vbt">${esc(r.Barangay || r.Venue)}</div>
+      ${r.Venue && r.Barangay ? `<div class="vbm">${esc(r.Venue)}</div>` : ""}
+      <div class="vbs">${s.text}</div>
     </div>`;
   }
 
-  function dayCell(iso, label, vs, today, maxChips, clickable, full){
-    const cls = ["cell", vs.length?"has":"", iso===today?"is-today":"", (clickable && iso===selected)?"sel":"", clickable?"clickable":""].join(" ");
-    const click = clickable ? ` onclick="pick('${iso}')"` : "";
-    const chips = vs.slice(0,maxChips).map(r=>miniBlock(r, full)).join("");
-    const more = vs.length>maxChips ? `<div class="more">+${vs.length-maxChips} more</div>` : "";
-    return `<div class="${cls}"${click}><div class="dnum">${label}</div>${chips}${more}</div>`;
+  function dayCell(iso, d, vs, today){
+    const cls = ["cell","clickable", vs.length?"has":"", iso===today?"is-today":"", iso===selected?"sel":""].join(" ");
+    const chips = vs.slice(0,2).map(r=>miniBlock(r,today)).join("");
+    const more = vs.length>2 ? `<div class="more">+${vs.length-2} more</div>` : "";
+    return `<div class="${cls}" onclick="pick('${iso}')"><div class="dnum">${d}</div>${chips}${more}</div>`;
   }
 
-  // Click a day in the monthly calendar
-  window.pick = function(iso){ selected = iso; render(); };
-
-  // ---------- views ----------
   function officeBox(message){
     return `<div class="office">
       <div class="office-msg">${message}</div>
@@ -427,95 +448,110 @@
       ${OFFICE_MAP ? `<a class="map" href="${esc(OFFICE_MAP)}" target="_blank" rel="noopener">📍 Open office in Maps</a>` : ""}
     </div>`;
   }
-  const OFFICE_LINE = "Our team is at the COMELEC office. Please visit us there for assistance.";
-  let mode = "today";   // "today" after a city is chosen, "month" for the whole calendar
 
-  function renderToday(today){
+  // Next visit after today in the chosen city (used when today has no registration)
+  function nextVisitHTML(today){
+    const city = $("cityFilter").value;
+    const next = DATA.filter(r=>r.Date>today && !isCancelled(r) && r["City/Municipality"]===city)
+      .sort((a,b)=> a.Date.localeCompare(b.Date) || (a.Barangay||"").localeCompare(b.Barangay||""))[0];
+    if(!next) return "";
+    return `<div class="office-next">Next visit: <b>${esc(prettyDate(next.Date))}</b><br>${esc(next.Barangay ? "Brgy. " + next.Barangay : next.Venue)}${next.Barangay && next.Venue ? " · " + esc(next.Venue) : ""}<br>
+      <a class="map" href="${esc(mapUrl(next))}" target="_blank" rel="noopener">📍 Open in Maps</a></div>`;
+  }
+
+  function setHead(city, sub, count){
+    $("resHead").innerHTML = `<div class="rt-city">${esc(city)}</div><div class="rt-sub">${esc(sub)}</div>` +
+      (count ? `<div class="rt-count">${esc(count)}</div>` : "");
+  }
+
+  // ---------- views ----------
+  function renderToday(today, city){
     $("nav").style.display = "none";
     const rows = visitsOn(today);
-    $("summary").textContent = rows.length ? `${rows.length} ${rows.length===1?"visit":"visits"} today` : "";
+    setHead(city, "Today · " + prettyDate(today), rows.length ? `${rows.length} ${rows.length===1?"visit":"visits"} today` : "");
     const body = rows.length
       ? rows.map(r=>cardHTML(r,today)).join("")
       : officeBox(`<b>No satellite registration today.</b><br>${OFFICE_LINE}${nextVisitHTML(today)}`);
-    $("list").innerHTML = body + `<button class="btn-month" onclick="showMonth()">View the whole calendar →</button>`;
+    $("list").innerHTML = body + `<button class="btn primary" onclick="showMonth()">View month calendar →</button>`;
   }
 
-  window.showMonth = function(){
-    const t = manilaToday();
-    monthKey = t.slice(0,7); selected = t; mode = "month";
-    render();
-    document.querySelector(".panel").scrollIntoView({behavior:"smooth", block:"start"});
-  };
-  window.showToday = function(){
-    mode = "today";
-    render();
-    document.querySelector(".panel").scrollIntoView({behavior:"smooth", block:"start"});
-  };
-
-  function renderMonth(today){
-    $("nav").style.display="flex";
+  function renderMonth(today, city){
+    $("nav").style.display = "flex";
     if(!monthKey) monthKey = today.slice(0,7);
     const [y,m] = monthKey.split("-").map(Number);
     const first = new Date(Date.UTC(y,m-1,1));
     const dim = new Date(Date.UTC(y,m,0)).getUTCDate();
-    $("monthLabel").textContent = first.toLocaleDateString("en-PH",{month:"long",year:"numeric",timeZone:"UTC"});
+    const label = first.toLocaleDateString("en-PH",{month:"long",year:"numeric",timeZone:"UTC"});
+    $("monthLabel").textContent = label;
     if(!selected || selected.slice(0,7)!==monthKey) selected = monthKey + "-01";
 
     let total = 0;
-    let html = '<div class="calscroll"><div class="cal-head">' + ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d=>`<div>${d}</div>`).join("") + '</div><div class="cal">';
+    let html = `<p class="tip">Tap a day to see its visits. Tap a visit for the full details and map.</p>`;
+    html += '<div class="cal-head">' + ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d=>`<div>${d}</div>`).join("") + '</div><div class="cal">';
     for(let i=0;i<first.getUTCDay();i++) html += '<div class="cell blank"></div>';
     for(let d=1; d<=dim; d++){
       const iso = `${monthKey}-${String(d).padStart(2,"0")}`;
       const vs = visitsOn(iso);
       total += vs.length;
-      html += dayCell(iso, d, vs, today, 2, true, true);
+      html += dayCell(iso, d, vs, today);
     }
-    html += '</div></div>';
+    html += '</div>';
 
     const picked = visitsOn(selected);
     html += `<div class="day">${esc(prettyDate(selected))} ${selected===today?'<span class="badge b-today">Today</span>':""} <span class="count">${picked.length} ${picked.length===1?"visit":"visits"}</span></div>`;
     html += picked.length ? picked.map(r=>cardHTML(r,today)).join("") : officeBox(`<b>No satellite registration on this day.</b><br>${OFFICE_LINE}`);
 
-    $("summary").textContent = `${total} ${total===1?"visit":"visits"} in ${$("monthLabel").textContent}`;
-    $("list").innerHTML = html + `<button class="btn-month" onclick="showToday()">← Back to today's schedule</button>`;
+    setHead(city, "Month calendar · " + label, `${total} ${total===1?"visit":"visits"} this month`);
+    $("list").innerHTML = html + `<button class="btn" onclick="showToday()">← Back to today’s schedule</button>`;
   }
 
   function render(){
     fillCities();
-    const today = manilaToday();
-    if(!$("cityFilter").value){
-      // No city chosen yet: show only the prompt, no schedule
-      $("nav").style.display = "none";
-      $("summary").textContent = "";
-      $("list").innerHTML = `<div class="office"><div class="office-msg"><b>Select your city or municipality</b><br>Choose it from the list above to see the satellite registration schedule.</div></div>`;
+    const city = $("cityFilter").value;
+    if(!city){
+      $("howto").style.display = "block";
+      $("results").style.display = "none";
       return;
     }
-    if(mode==="today") renderToday(today);
-    else renderMonth(today);
+    $("howto").style.display = "none";
+    $("results").style.display = "block";
+    const today = manilaToday();
+    if(mode==="today") renderToday(today, city);
+    else renderMonth(today, city);
   }
 
-  // ---------- details popup (tap a visit in the calendar) ----------
+  // ---------- actions ----------
+  function scrollToResults(){ $("results").scrollIntoView({behavior:"smooth", block:"start"}); }
+  window.showMonth = function(){
+    const t = manilaToday();
+    monthKey = t.slice(0,7); selected = t; mode = "month";
+    render(); scrollToResults();
+  };
+  window.showToday = function(){ mode = "today"; render(); scrollToResults(); };
+  window.pick = function(iso){ selected = iso; render(); };
+
+  // details popup (tap a visit in the calendar)
   window.openDetail = function(id){
     const r = DATA.find(x=>x._id===id);
     if(!r) return;
-    $("mbody").innerHTML = cardHTML(r, manilaToday());
+    $("mbody").innerHTML = cardHTML(r, manilaToday(), true);
     $("modal").style.display = "flex";
   };
   window.closeDetail = function(){ $("modal").style.display = "none"; };
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeDetail(); });
 
   // ---------- events ----------
   $("prev").addEventListener("click",()=>{
     const [y,m] = monthKey.split("-").map(Number);
-    const d = new Date(Date.UTC(y,m-2,1));
-    monthKey = d.toISOString().slice(0,7); selected = ""; render();
+    monthKey = new Date(Date.UTC(y,m-2,1)).toISOString().slice(0,7); selected = ""; render();
   });
   $("next").addEventListener("click",()=>{
     const [y,m] = monthKey.split("-").map(Number);
-    const d = new Date(Date.UTC(y,m,1));
-    monthKey = d.toISOString().slice(0,7); selected = ""; render();
+    monthKey = new Date(Date.UTC(y,m,1)).toISOString().slice(0,7); selected = ""; render();
   });
   $("cityFilter").addEventListener("change", ()=>{ mode = "today"; monthKey = ""; selected = ""; render(); });
 
+  fillCities();
   loadData();
   setInterval(loadData, REFRESH_MINUTES*60*1000);
   setInterval(render, 60*1000);   // keeps the status correct when 6:00 pm passes
