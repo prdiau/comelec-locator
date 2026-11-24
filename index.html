@@ -40,14 +40,6 @@
   .hint{margin:8px 2px 0;font-size:13px;color:var(--muted)}
   .error{background:var(--redbg);color:var(--red);padding:10px 12px;border-radius:10px;font-size:14px;margin-bottom:12px;display:none}
 
-  /* ---------- how to use (shown until a city is chosen) ---------- */
-  .howto{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:18px 16px}
-  .howto h2{margin:0 0 12px;font-size:17px;color:var(--navy)}
-  .howto ol{list-style:none;margin:0;padding:0;display:grid;gap:12px}
-  .howto li{display:flex;gap:12px;align-items:flex-start;font-size:15px}
-  .howto li .n{width:26px;height:26px;border-radius:50%;background:var(--bluebg);color:var(--navy);font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex:none;font-size:14px}
-  .howto .foot{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
-
   /* ---------- results ---------- */
   .results{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:16px;display:none}
   .res-head{margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
@@ -104,8 +96,8 @@
   .dnum{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px}
   .is-today .dnum{display:inline-block;background:var(--gold);padding:0 7px;border-radius:999px}
   .vb{background:var(--cbg,#f4f7fc);border-left:3px solid var(--c,var(--navy));border-radius:6px;padding:4px 6px;margin-bottom:5px;font-size:11px;line-height:1.35;overflow:hidden;cursor:pointer}
-  .vbt{font-weight:700;color:var(--navy);overflow-wrap:anywhere}
-  .vbm{color:var(--muted);overflow-wrap:anywhere}
+  .vbt{font-weight:700;color:var(--navy);overflow-wrap:break-word}
+  .vbm{color:var(--muted);overflow-wrap:break-word}
   .vbs{font-weight:700;font-size:10px;margin-top:2px;color:var(--green)}
   .vb.up .vbs{color:var(--blue)}
   .vb.done .vbs{color:var(--muted)}
@@ -117,7 +109,7 @@
 
   /* ---------- details popup ---------- */
   .modal{position:fixed;inset:0;background:rgba(11,42,74,.55);align-items:center;justify-content:center;padding:16px;z-index:50}
-  .mbox{background:#fff;border-radius:14px;max-width:440px;width:100%;max-height:90vh;overflow:auto;padding:22px 20px 18px;position:relative;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+  .mbox{background:#fff;border-radius:14px;max-width:440px;width:100%;max-height:90vh;overflow:auto;padding:38px 16px 16px;position:relative;box-shadow:0 12px 40px rgba(0,0,0,.25)}
   .mbox .card{grid-template-columns:1fr;margin:0}
   .mbox .venue{font-size:20px}
   .mbox .meta{font-size:16px}
@@ -133,17 +125,26 @@
     .htext h1{font-size:17px}
     .htext p{font-size:12.5px}
     .hwrap{gap:12px}
-    main{padding:12px 12px 4px}
-    .picker,.results,.howto{padding:14px 12px}
+    main{padding:10px 8px 4px}
+    .picker{padding:14px 12px}
+    .results{padding:14px 6px}
+    .res-head,.tip,.day{padding-left:6px;padding-right:6px}
+    .btn{width:calc(100% - 12px);margin-left:6px;margin-right:6px}
+    .card{margin-left:6px;margin-right:6px}
+    .office{margin-left:6px;margin-right:6px}
+    .monthnav{padding:0 6px}
     .step-label{font-size:17px}
-    .cal{gap:3px}
-    .cal-head{font-size:10px;gap:3px}
-    .cell{min-height:86px;padding:3px}
-    .cell .dnum{font-size:11px;margin-bottom:3px}
-    .cell .vb{padding:3px 4px;margin-bottom:3px;font-size:9px}
-    .cell .vbm{font-size:8px}
-    .cell .vbs{font-size:8px;margin-top:1px}
-    .mbox{padding:18px 14px 14px}
+    /* month calendar: 7 narrow columns, so keep text small and tight */
+    .cal,.cal-head{gap:2px}
+    .cal-head{font-size:10px}
+    .cell{min-height:88px;padding:2px 1px;border-radius:7px}
+    .cell .dnum{font-size:11px;margin:0 0 2px 2px}
+    .cell .vb{padding:2px;margin-bottom:2px;font-size:8px;border-left-width:2px;border-radius:4px;line-height:1.2}
+    .cell .vbt{overflow-wrap:break-word}
+    .cell .vbm{font-size:7px;overflow-wrap:break-word}
+    .cell .vbs{font-size:7px;margin-top:1px;letter-spacing:-.2px}
+    .cell .more{font-size:9px}
+    .mbox{padding:38px 12px 12px}
     .mbox .venue{font-size:18px}
     .card{grid-template-columns:1fr}
     .badges{flex-direction:row;align-items:center;order:-1}
@@ -172,17 +173,6 @@
       <option value="">Choose your city/municipality…</option>
     </select>
     <p class="hint">Pick the city or municipality where you want to register.</p>
-  </section>
-
-  <!-- Instructions (shown until a city is chosen) -->
-  <section class="howto" id="howto">
-    <h2>How to use this page</h2>
-    <ol>
-      <li><span class="n">1</span><div><b>Select</b> your city/municipality in the box above.</div></li>
-      <li><span class="n">2</span><div>See <b>today’s</b> registration barangay and location, then tap <b>Open in Maps</b> for directions.</div></li>
-      <li><span class="n">3</span><div>Tap <b>View month calendar</b> to check the dates ahead.</div></li>
-    </ol>
-    <p class="foot">If we are not in your area today, you can visit us at the COMELEC office.</p>
   </section>
 
   <!-- Results (shown after a city is chosen) -->
@@ -509,11 +499,9 @@
     fillCities();
     const city = $("cityFilter").value;
     if(!city){
-      $("howto").style.display = "block";
       $("results").style.display = "none";
       return;
     }
-    $("howto").style.display = "none";
     $("results").style.display = "block";
     const today = manilaToday();
     if(mode==="today") renderToday(today, city);
